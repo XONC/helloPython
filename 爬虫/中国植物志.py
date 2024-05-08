@@ -17,11 +17,13 @@ if __name__ == '__main__':
   sheet1.write(0, 4, "种名")  # 第1行第1列数据
   sheet1.write(0, 5, "种学名")  # 第1行第2列数据
   sheet1.write(0, 6, "产地分布")  # 第1行第2列数据 苋科, 类林地苋属
-  an_hui_data = requests.get(f"http://www.iplant.cn/frps/protreeajax.aspx?ID=0&p=34")
+  # 省份的id
+  p = 34
+  an_hui_data = requests.get(f"http://www.iplant.cn/frps/protreeajax.aspx?ID=0&p={p}")
   ace_html_data = bs4.BeautifulSoup(an_hui_data.text, 'lxml')
   i = 1
   for item in ace_html_data.select("td > .folder_close_end"):
-    genus_data = requests.get(f"http://www.iplant.cn/frps/protreeajax.aspx?ID={item.attrs['id'].split('_')[1]}&p=34")
+    genus_data = requests.get(f"http://www.iplant.cn/frps/protreeajax.aspx?ID={item.attrs['id'].split('_')[1]}&p={p}")
     genus_html_data = bs4.BeautifulSoup(genus_data.text, 'lxml')
     for genus_item in genus_html_data.select("td > .file_end > a"):
       id = genus_item.attrs['href'].split('id=')[1]
