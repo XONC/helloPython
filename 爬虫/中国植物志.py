@@ -84,7 +84,7 @@ def getData(list):
         # break
         # 测试用断点
       # break
-    workbook.save(r'test.xls')  # 保存
+    workbook.save(fr'{obj.get("name")}.xls')  # 保存
 
 def getShenData():
   an_hui_data = requests.get(f"https://www.iplant.cn/frps/prohot.html")
