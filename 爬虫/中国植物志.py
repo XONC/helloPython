@@ -6,7 +6,11 @@ import bs4
 import time
 
 def getData(list):
-  for obj in list:
+    obj = {
+      "name": '全部',
+      "p": -1 # -1 时查询全国，否则需指定省份的p值
+    }
+  # for obj in list:
     print(obj)
     workbook = xlwt.Workbook('utf-8')  # 新建工作簿
     sheet1 = workbook.add_sheet(obj.get('name'))  # 新建sheet
@@ -21,11 +25,11 @@ def getData(list):
 
     # 省份的id
     p = obj.get('p')
-    an_hui_data = requests.get(f"http://www.iplant.cn/frps/protreeajax.aspx?ID=0&p={p}")
+    an_hui_data = requests.get(f"http://www.iplant.cn/frps/protreeajax.aspx?ID=0") if p == -1  else requests.get(f"http://www.iplant.cn/frps/protreeajax.aspx?ID=0&p={p}")
     ace_html_data = bs4.BeautifulSoup(an_hui_data.text, 'lxml')
     i = 1
     for item in ace_html_data.select("td > .folder_close_end"):
-      genus_data = requests.get(f"http://www.iplant.cn/frps/protreeajax.aspx?ID={item.attrs['id'].split('_')[1]}&p={p}")
+      genus_data = requests.get(f"http://www.iplant.cn/frps/protreeajax.aspx?ID={item.attrs['id'].split('_')[1]}") if p == -1 else requests.get(f"http://www.iplant.cn/frps/protreeajax.aspx?ID={item.attrs['id'].split('_')[1]}&p={p}")
       genus_html_data = bs4.BeautifulSoup(genus_data.text, 'lxml')
       for genus_item in genus_html_data.select("td > .file_end > a"):
         id = genus_item.attrs['href'].split('id=')[1]
@@ -81,9 +85,9 @@ def getData(list):
           time.sleep(1)
           print("开启")
         # 测试用断点
-        # break
+        break
         # 测试用断点
-      # break
+      break
     workbook.save(fr'{obj.get("name")}.xls')  # 保存
 
 def getShenData():
